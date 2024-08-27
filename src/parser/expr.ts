@@ -13,7 +13,6 @@ export function parse_expr(p: Parser, bp: BindingPower): Expr {
     }
 
     let left = nud_fn(p)
-
     while (bpLookpup.get(p.currentTokenKind)! > bp) {
         const tokenKind = p.currentTokenKind
         const led_fn = ledLookpup.get(tokenKind);
@@ -22,10 +21,17 @@ export function parse_expr(p: Parser, bp: BindingPower): Expr {
             throw new Error("LED Handler expected for token " + TokenKindUtil.toString(tokenKind));
         }
 
-        left = led_fn(p, left, bp)
+        left = led_fn(p, left, bpLookpup.get(p.currentTokenKind)!)
     }
 
     return left
+}
+
+export function parse_grouping_expr(p: Parser): Expr {
+    p.advance();
+    const expr = parse_expr(p, BindingPower.DEFAULT);
+    p.assertCurrentTokenKingIs(TokenKind.CLOSE_PAREN);
+    return expr;
 }
 
 export function parse_primary_expr(p: Parser): Expr {

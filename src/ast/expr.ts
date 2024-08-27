@@ -30,4 +30,18 @@ export class BinaryExpr extends Expr {
     ) { super(); }
 }
 
+export class PrefixExpr extends Expr {
+    public constructor(
+        private token: Token,
+        private right: Expr,
+    ) { super(); }
+}
+
+export class AssignementExpr extends Expr {
+    public constructor(
+        private assigne: Expr,
+        private operator: Token,
+        private value: Expr,
+    ) { super(); }
+}
 //#endregion complex

@@ -1,5 +1,5 @@
 import { Expr, Stmt } from "../ast/ast";
-import { BinaryExpr } from "../ast/expr";
+import { AssignementExpr, BinaryExpr, PrefixExpr } from "../ast/expr";
 import { ExpressionStmt, VarDeclarationStmt } from "../ast/stmt";
 import { TokenKind } from "../lexer/Token";
 import { parse_expr } from "./expr";
@@ -32,6 +32,19 @@ export function parse_binary_expr(p: Parser, left: Expr, bp: BindingPower): Expr
         operatorToken,
         right,
     );
+}
+
+export function parse_prefix_expr(p: Parser): Expr {
+    const operator = p.advance();
+    const rhs = parse_expr(p, BindingPower.DEFAULT);
+
+    return new PrefixExpr(operator, rhs);
+}
+export function parse_assignement_expr(p: Parser, left: Expr, bp: BindingPower): Expr {
+    const operator = p.advance();
+    const rhs = parse_expr(p, bp);
+
+    return new AssignementExpr(left, operator, rhs);
 }
 
 export function parse_var_decl_stmt(p: Parser): Stmt {

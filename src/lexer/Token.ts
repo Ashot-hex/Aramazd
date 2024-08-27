@@ -57,10 +57,10 @@ export enum TokenKind {
     NULLISH_ASSIGNMENT,
 
     //Maths
-    ADDITION,
-    SUBSTRACTION,
-    DIVISION,
-    MULTIPLICATION,
+    PLUS,
+    DASH,
+    SLASH,
+    STAR,
 
     //Keywords
     LET,

@@ -81,11 +81,26 @@ function createLexer(source: string): Lexer {
         { regex: /^\/\/.*/, handler: commentHandler },
         { regex: /^[\w_][\w\d_]*/, handler: symbolHandler },
 
-        createPattern(TokenKind.ADDITION, '+'),
-        createPattern(TokenKind.SUBSTRACTION, '-'),
-        createPattern(TokenKind.DIVISION, '/'),
-        createPattern(TokenKind.MULTIPLICATION, '*'),
+        createPattern(TokenKind.NULL, 'null'),
+        createPattern(TokenKind.TRUE, 'true'),
+        createPattern(TokenKind.FALSE, 'false'),
+        createPattern(TokenKind.NULLISH_ASSIGNMENT, '??='),
+        
+        createPattern(TokenKind.PLUS_PLUS, '++'),
+        createPattern(TokenKind.MINUS_MINUS, '--'),
+        createPattern(TokenKind.PLUS_EQUALS, '+='),
+        createPattern(TokenKind.MINUS_EQUALS, '-='),
 
+        createPattern(TokenKind.LAMBDA_OPERATOR, '=>'),
+        createPattern(TokenKind.EQUALS, '=='),
+        createPattern(TokenKind.NOT_EQUALS, '!='),
+        createPattern(TokenKind.NOT, '!'),
+        createPattern(TokenKind.LESS_EQUALS, '<='),
+        createPattern(TokenKind.GREATER_EQUALS, '>='),
+        createPattern(TokenKind.OR, '&&'),
+        createPattern(TokenKind.AND, '||'),
+        createPattern(TokenKind.COALESCENCE, '??'),
+        
         createPattern(TokenKind.OPEN_BRACKET, '['),
         createPattern(TokenKind.CLOSE_BRACKET, ']'),
         createPattern(TokenKind.OPEN_CURLY, '{'),
@@ -93,37 +108,21 @@ function createLexer(source: string): Lexer {
         createPattern(TokenKind.OPEN_PAREN, '('),
         createPattern(TokenKind.CLOSE_PAREN, ')'),
 
-        createPattern(TokenKind.LAMBDA_OPERATOR, '=>'),
+        createPattern(TokenKind.PLUS, '+'),
+        createPattern(TokenKind.DASH, '-'),
+        createPattern(TokenKind.SLASH, '/'),
+        createPattern(TokenKind.STAR, '*'),
 
-        createPattern(TokenKind.EQUALS, '=='),
         createPattern(TokenKind.ASSIGNMENT, '='),
-        createPattern(TokenKind.NOT_EQUALS, '!='),
-        createPattern(TokenKind.NOT, '!'),
 
         createPattern(TokenKind.LESS, '<'),
-        createPattern(TokenKind.LESS_EQUALS, '<='),
         createPattern(TokenKind.GREATER, '>'),
-        createPattern(TokenKind.GREATER_EQUALS, '>='),
-
-        createPattern(TokenKind.OR, '&&'),
-        createPattern(TokenKind.AND, '||'),
 
         createPattern(TokenKind.MEMBER_OPERATOR, '.'),
         createPattern(TokenKind.SEMI_COLON, ';'),
         createPattern(TokenKind.COLON, ':'),
-        createPattern(TokenKind.COALESCENCE, '??'),
         createPattern(TokenKind.QUESTION, '?'),
         createPattern(TokenKind.COMMA, ','),
-
-        createPattern(TokenKind.PLUS_PLUS, '++'),
-        createPattern(TokenKind.MINUS_MINUS, '--'),
-        createPattern(TokenKind.PLUS_EQUALS, '+='),
-        createPattern(TokenKind.MINUS_EQUALS, '-='),
-        createPattern(TokenKind.NULLISH_ASSIGNMENT, '??='),
-
-        createPattern(TokenKind.NULL, 'null'),
-        createPattern(TokenKind.TRUE, 'true'),
-        createPattern(TokenKind.FALSE, 'false'),
     ];
 
     return new Lexer(patterns, source);

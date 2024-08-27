@@ -1,5 +1,4 @@
 import fs from 'node:fs';
-import { Lexer } from './lexer/Lexer';
 import { Parser } from './parser/parser';
 
 try {
