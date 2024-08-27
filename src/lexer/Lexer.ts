@@ -126,7 +126,5 @@ function createLexer(source: string): Lexer {
         createPattern(TokenKind.FALSE, 'false'),
     ];
 
-    console.debug("Every TokenKind has a matching pattern :", Object.keys(TokenKind).length == patterns.length);
-
     return new Lexer(patterns, source);
 }

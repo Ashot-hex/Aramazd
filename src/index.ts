@@ -1,11 +1,12 @@
 import fs from 'node:fs';
 import { Lexer } from './lexer/Lexer';
+import { Parser } from './parser/parser';
 
 try {
     const source = fs.readFileSync('./src/source.lang', 'utf8');
-    const tokens = Lexer.Tokenize(source);
+    const result = Parser.Parse(source);
 
-    json(tokens);
+    json(result);
 }
 catch (err) {
     console.error((<Error>err).message);
