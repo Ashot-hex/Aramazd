@@ -1,5 +1,6 @@
-import { RegexHandler, skipHandler, numberHandler, stringHandler, defaultHandler, commentHandler, symbolHandler } from "./handlers";
-import { Token, TokenKind } from "./Token"
+import { RegexHandler, Handlers } from "./handlers";
+import { Token } from "./Token"
+import { TokenKind } from "./TokenKind";
 
 
 type RegexPattern = {
@@ -65,21 +66,22 @@ function createLexer(source: string): Lexer {
     const createPattern = (kind: TokenKind, value: string) => {
         const str = value.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
         const regex = new RegExp("^" + str)
+
         return {
             regex: regex,
-            handler: defaultHandler(kind, value)
+            handler: Handlers.defaultHandler(kind, value)
         };
     }
 
     const patterns: RegexPattern[] = [
-        { regex: /^\s+/, handler: skipHandler },
-        { regex: /^\.\d+/, handler: numberHandler },
-        { regex: /^\d+\.\d+/, handler: numberHandler },
-        { regex: /^\d+/, handler: numberHandler },
-        { regex: /^"[^"]*"/, handler: stringHandler },
-        { regex: /^'[^']*'/, handler: stringHandler },
-        { regex: /^\/\/.*/, handler: commentHandler },
-        { regex: /^[\w_][\w\d_]*/, handler: symbolHandler },
+        { regex: /^\s+/, handler: Handlers.skipHandler },
+        { regex: /^\.\d+/, handler: Handlers.numberHandler },
+        { regex: /^\d+\.\d+/, handler: Handlers.numberHandler },
+        { regex: /^\d+/, handler: Handlers.numberHandler },
+        { regex: /^"[^"]*"/, handler: Handlers.stringHandler },
+        { regex: /^'[^']*'/, handler: Handlers.stringHandler },
+        { regex: /^\/\/.*/, handler: Handlers.commentHandler },
+        { regex: /^[\w_][\w\d_]*/, handler: Handlers.symbolHandler },
 
         createPattern(TokenKind.NULL, 'null'),
         createPattern(TokenKind.TRUE, 'true'),

@@ -1,17 +1,17 @@
 import fs from 'node:fs';
-import { Parser } from './parser/parser';
+import { Parser } from './parsing/Parser';
 
 try {
     const source = fs.readFileSync('./src/source.lang', 'utf8');
     const result = Parser.Parse(source);
 
-    json(result);
+    print(result);
 }
 catch (err) {
     console.error((<Error>err).message);
     console.error((<Error>err));
 }
 
-function json(o: any): void {
+function print(o: any): void {
     console.log(JSON.stringify(o, null, 2))
 }

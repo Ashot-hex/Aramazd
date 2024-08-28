@@ -1,6 +1,6 @@
-export abstract class Stmt {
-    public stmt(): void { }
+export abstract class Statement {
+    public statement(): void { }
 }
-export abstract class Expr {
-    public expr(): void { }
+export abstract class Expression {
+    public expression(): void { }
 }

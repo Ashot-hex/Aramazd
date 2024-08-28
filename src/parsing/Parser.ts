@@ -1,16 +1,15 @@
-import { Stmt } from "../ast/ast";
-import { BlockStmt } from "../ast/stmt";
+import { Statement } from "../ast/ast";
+import { BlockStmt } from "../ast/statements";
 import { Lexer } from "../lexer/Lexer";
-import { Token, TokenKind } from "../lexer/Token";
-import { createTokenLookups } from "./lookups";
-import { parse_stmt } from "./stmt";
+import { Token } from "../lexer/Token";
+import { TokenKind } from "../lexer/TokenKind";
+import { parse_stmt } from "./parsing_utils";
 
 export class Parser {
     public static Parse(source: string): BlockStmt {
-        createTokenLookups();
         const tokens = Lexer.Tokenize(source);
         const parser = new Parser(tokens);
-        const body: Stmt[] = [];
+        const body: Statement[] = [];
 
         while (parser.hasTokens()) {
             body.push(parse_stmt(parser));
@@ -31,6 +30,7 @@ export class Parser {
     public get currentTokenKind(): TokenKind {
         return this.currentToken.Kind
     }
+
     public advance(): Token {
         const token = this.currentToken;
         this.pos++;
@@ -39,8 +39,7 @@ export class Parser {
     public hasTokens(): boolean {
         return this.pos < this.tokens.length && this.currentTokenKind !== TokenKind.EOF;
     }
-
-    public assertCurrentTokenKingIs(expected: TokenKind): Token {
+    public assertCurrentTokenKindIs(expected: TokenKind): Token {
         if (this.currentTokenKind !== expected) {
             throw new Error(`Unexpected error, got ${this.currentTokenKind}, expected ${expected}`);
         }

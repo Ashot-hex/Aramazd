@@ -1,16 +1,27 @@
 import { Lexer } from "./Lexer";
-import { TokenKind, Token, RESERVED_KEYWORDS_LOOKUP } from "./Token";
+import { Token } from "./Token";
+import { TokenKind, RESERVED_KEYWORDS_LOOKUP } from "./TokenKind";
 
 export const RegexHandler = (lex: Lexer, regex: RegExp): void => { };
 
-export function defaultHandler(kind: TokenKind, value: string): typeof RegexHandler {
+export const Handlers = {
+    defaultHandler,
+    commentHandler,
+    stringHandler,
+    numberHandler,
+    skipHandler,
+    symbolHandler,
+}
+
+//#region handlers
+function defaultHandler(kind: TokenKind, value: string): typeof RegexHandler {
     return (l: Lexer, regex: RegExp) => {
         l.advanceN(value.length);
         l.push(new Token(kind, value))
     }
 }
 
-export function commentHandler(l: Lexer, regex: RegExp): void {
+function commentHandler(l: Lexer, regex: RegExp): void {
     const match = l.remainder().match(regex);
     if (match) {
         l.advanceN(match[0].length);
@@ -18,15 +29,14 @@ export function commentHandler(l: Lexer, regex: RegExp): void {
     }
 }
 
-export function stringHandler(l: Lexer, regex: RegExp): void {
+function stringHandler(l: Lexer, regex: RegExp): void {
     const match = l.remainder().match(regex);
     if (match) {
         l.advanceN(match[0].length);
         l.push(new Token(TokenKind.STRING, match[0]))
     }
 }
-
-export function numberHandler(l: Lexer, regex: RegExp): void {
+function numberHandler(l: Lexer, regex: RegExp): void {
     const match = l.remainder().match(regex);
     if (match) {
         l.advanceN(match[0].length);
@@ -34,12 +44,12 @@ export function numberHandler(l: Lexer, regex: RegExp): void {
     }
 }
 
-export function skipHandler(l: Lexer, regex: RegExp): void {
+function skipHandler(l: Lexer, regex: RegExp): void {
     const match = l.remainder().match(regex);
     l.advanceN(match?.length ?? 0);
 }
 
-export function symbolHandler(l: Lexer, regex: RegExp): void {
+function symbolHandler(l: Lexer, regex: RegExp): void {
     const match = l.remainder().match(regex);
     if (match) {
         const value = match[0];
@@ -50,3 +60,4 @@ export function symbolHandler(l: Lexer, regex: RegExp): void {
         l.advanceN(value.length);
     }
 }
+//#endregion handlers
