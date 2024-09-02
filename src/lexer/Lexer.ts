@@ -30,7 +30,8 @@ export class Lexer {
             }
         }
 
-        lexer.push(new Token(TokenKind.EOF, "EOF"));
+        // lexer.push(new Token(TokenKind.EOF, "EOF", lexer.currentLine(), source.split('\n').at(-1)?.length ?? 0));
+        lexer.push(TokenKind.EOF, "EOF");
 
         return lexer.Tokens;
     }
@@ -49,9 +50,23 @@ export class Lexer {
     advanceN(n: number): void {
         this.pos += n;
     }
-    push(token: Token): void {
-        this.tokens.push(token);
+    push(kind: TokenKind, value: string): void {
+        const split = this.source.slice(0, this.pos).split('\n');
+        const line = split.length;
+        const col = split.at(-1)?.length ?? 0;
+
+        const token = new Token(
+            kind,
+            value,
+            line,
+            col
+        );
+
+        this.Tokens.push(token);
     }
+    // push(token: Token): void {
+    // this.tokens.push(token);
+    // }
     remainder(): string {
         return this.source.slice(this.pos);
     }
@@ -74,6 +89,7 @@ function createLexer(source: string): Lexer {
     }
 
     const patterns: RegexPattern[] = [
+        // Symbol length n
         { regex: /^\s+/, handler: Handlers.skipHandler },
         { regex: /^\.\d+/, handler: Handlers.numberHandler },
         { regex: /^\d+\.\d+/, handler: Handlers.numberHandler },
@@ -83,48 +99,44 @@ function createLexer(source: string): Lexer {
         { regex: /^\/\/.*/, handler: Handlers.commentHandler },
         { regex: /^[\w_][\w\d_]*/, handler: Handlers.symbolHandler },
 
-        createPattern(TokenKind.NULL, 'null'),
-        createPattern(TokenKind.TRUE, 'true'),
-        createPattern(TokenKind.FALSE, 'false'),
-        createPattern(TokenKind.NULLISH_ASSIGNMENT, '??='),
-        
-        createPattern(TokenKind.PLUS_PLUS, '++'),
-        createPattern(TokenKind.MINUS_MINUS, '--'),
-        createPattern(TokenKind.PLUS_EQUALS, '+='),
-        createPattern(TokenKind.MINUS_EQUALS, '-='),
+        // Symbol length 3
+        createPattern(TokenKind.NULLISH_ASSIGNMENT, "??="),
 
-        createPattern(TokenKind.LAMBDA_OPERATOR, '=>'),
-        createPattern(TokenKind.EQUALS, '=='),
-        createPattern(TokenKind.NOT_EQUALS, '!='),
-        createPattern(TokenKind.NOT, '!'),
-        createPattern(TokenKind.LESS_EQUALS, '<='),
-        createPattern(TokenKind.GREATER_EQUALS, '>='),
-        createPattern(TokenKind.OR, '&&'),
-        createPattern(TokenKind.AND, '||'),
-        createPattern(TokenKind.COALESCENCE, '??'),
-        
-        createPattern(TokenKind.OPEN_BRACKET, '['),
-        createPattern(TokenKind.CLOSE_BRACKET, ']'),
-        createPattern(TokenKind.OPEN_CURLY, '{'),
-        createPattern(TokenKind.CLOSE_CURLY, '}'),
-        createPattern(TokenKind.OPEN_PAREN, '('),
-        createPattern(TokenKind.CLOSE_PAREN, ')'),
+        // Symbol length 2
+        createPattern(TokenKind.EQUALS, "=="),
+        createPattern(TokenKind.NOT_EQUALS, "!="),
+        createPattern(TokenKind.LESS_EQUALS, "<="),
+        createPattern(TokenKind.GREATER_EQUALS, ">="),
+        createPattern(TokenKind.OR, "||"),
+        createPattern(TokenKind.AND, "&&"),
+        createPattern(TokenKind.DOT_DOT, ".."),
+        createPattern(TokenKind.PLUS_PLUS, "++"),
+        createPattern(TokenKind.MINUS_MINUS, "--"),
+        createPattern(TokenKind.PLUS_EQUALS, "+="),
+        createPattern(TokenKind.MINUS_EQUALS, "-="),
 
-        createPattern(TokenKind.PLUS, '+'),
-        createPattern(TokenKind.DASH, '-'),
-        createPattern(TokenKind.SLASH, '/'),
-        createPattern(TokenKind.STAR, '*'),
+        // Symbol length 1
+        createPattern(TokenKind.OPEN_BRACKET, "["),
+        createPattern(TokenKind.CLOSE_BRACKET, "]"),
+        createPattern(TokenKind.OPEN_CURLY, "{"),
+        createPattern(TokenKind.CLOSE_CURLY, "}"),
+        createPattern(TokenKind.OPEN_PAREN, "("),
+        createPattern(TokenKind.CLOSE_PAREN, ")"),
 
-        createPattern(TokenKind.ASSIGNMENT, '='),
-
-        createPattern(TokenKind.LESS, '<'),
-        createPattern(TokenKind.GREATER, '>'),
-
-        createPattern(TokenKind.MEMBER_OPERATOR, '.'),
-        createPattern(TokenKind.SEMI_COLON, ';'),
-        createPattern(TokenKind.COLON, ':'),
-        createPattern(TokenKind.QUESTION, '?'),
-        createPattern(TokenKind.COMMA, ','),
+        createPattern(TokenKind.ASSIGNMENT, "="),
+        createPattern(TokenKind.NOT, "!"),
+        createPattern(TokenKind.LESS, "<"),
+        createPattern(TokenKind.GREATER, ">"),
+        createPattern(TokenKind.DOT, "."),
+        createPattern(TokenKind.SEMI_COLON, ";"),
+        createPattern(TokenKind.COLON, ":"),
+        createPattern(TokenKind.QUESTION, "?"),
+        createPattern(TokenKind.COMMA, ","),
+        createPattern(TokenKind.PLUS, "+"),
+        createPattern(TokenKind.DASH, "-"),
+        createPattern(TokenKind.SLASH, "/"),
+        createPattern(TokenKind.STAR, "*"),
+        createPattern(TokenKind.PERCENT, "%"),
     ];
 
     return new Lexer(patterns, source);

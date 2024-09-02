@@ -3,16 +3,20 @@ import { BlockStmt } from "../ast/statements";
 import { Lexer } from "../lexer/Lexer";
 import { Token } from "../lexer/Token";
 import { TokenKind } from "../lexer/TokenKind";
-import { parse_stmt } from "./parsing_utils";
+import { parse_stmt } from "./stmt";
 
 export class Parser {
-    public static Parse(source: string): BlockStmt {
-        const tokens = Lexer.Tokenize(source);
+    public static Parse(tokens: Token[]): BlockStmt {
         const parser = new Parser(tokens);
         const body: Statement[] = [];
 
         while (parser.hasTokens()) {
-            body.push(parse_stmt(parser));
+            try {
+                body.push(parse_stmt(parser));
+            } catch (err) {
+                console.error(err);
+                throw new SyntaxError()
+            }
         }
 
         return new BlockStmt(body);
@@ -39,11 +43,17 @@ export class Parser {
     public hasTokens(): boolean {
         return this.pos < this.tokens.length && this.currentTokenKind !== TokenKind.EOF;
     }
-    public assertCurrentTokenKindIs(expected: TokenKind): Token {
+    public expect(expected: TokenKind): Token {
         if (this.currentTokenKind !== expected) {
-            throw new Error(`Unexpected error, got ${this.currentTokenKind}, expected ${expected}`);
+            throw new Error(`Unexpected error at ${JSON.stringify(this.currentPosition(), null, 2)}, got ${this.currentTokenKind.toString()}, expected ${expected.toString()}`);
         }
 
         return this.advance();
+    }
+    private currentPosition(): { line: number, col: number } {
+        return {
+            line: this.currentToken.Line,
+            col: this.currentToken.Col,
+        };
     }
 }

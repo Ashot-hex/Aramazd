@@ -1,8 +1,9 @@
-import { Statement, Expression } from "../ast/ast";
+import { Expression, Statement } from "../ast/ast";
 import { TokenKind } from "../lexer/TokenKind";
 import { BindingPower } from "./BindingPower";
+import { parse_binary_expr, parse_primary_expr, parse_prefix_expr, parse_grouping_expr, parse_array_literal_expr, parse_call_expr, parse_fn_expr, parse_member_expr, parse_assignment_expr, parse_range_expr } from "./expr";
 import { Parser } from "./Parser";
-import { parse_assignement_expr, parse_binary_expr, parse_primary_expr, parse_grouping_expr, parse_prefix_expr, parse_var_decl_stmt } from "./parsing_utils";
+import { parse_block_stmt, parse_class_declaration_stmt, parse_class_instanciation_expr, parse_fn_declaration, parse_foreach_stmt, parse_if_stmt, parse_import_stmt, parse_var_decl_stmt } from "./stmt";
 
 type stmt_handler = (p: Parser) => Statement;
 type nud_handler = (p: Parser) => Expression;
@@ -31,14 +32,15 @@ function stmt(kind: TokenKind, stmt_fn: stmt_handler) {
 //Is automatically called right bellow
 function createTokenLookups(): void {
     //#region LED
-    // Assignements
-    led(TokenKind.ASSIGNMENT, BindingPower.ASSIGNMENT, parse_assignement_expr)
-    led(TokenKind.PLUS_EQUALS, BindingPower.ASSIGNMENT, parse_assignement_expr)
-    led(TokenKind.MINUS_EQUALS, BindingPower.ASSIGNMENT, parse_assignement_expr)
+    // Assignment
+    led(TokenKind.ASSIGNMENT, BindingPower.ASSIGNMENT, parse_assignment_expr)
+    led(TokenKind.PLUS_EQUALS, BindingPower.ASSIGNMENT, parse_assignment_expr)
+    led(TokenKind.MINUS_EQUALS, BindingPower.ASSIGNMENT, parse_assignment_expr)
 
     // Logical
     led(TokenKind.AND, BindingPower.LOGICAL, parse_binary_expr)
     led(TokenKind.OR, BindingPower.LOGICAL, parse_binary_expr)
+    led(TokenKind.DOT_DOT, BindingPower.LOGICAL, parse_range_expr)
 
     // Relational
     led(TokenKind.LESS, BindingPower.RELATIONAL, parse_binary_expr)
@@ -48,26 +50,46 @@ function createTokenLookups(): void {
     led(TokenKind.EQUALS, BindingPower.RELATIONAL, parse_binary_expr)
     led(TokenKind.NOT_EQUALS, BindingPower.RELATIONAL, parse_binary_expr)
 
-    // Additive & Multiplicative
+    // Additive & Multiplicitave
     led(TokenKind.PLUS, BindingPower.ADDITIVE, parse_binary_expr)
     led(TokenKind.DASH, BindingPower.ADDITIVE, parse_binary_expr)
-    led(TokenKind.STAR, BindingPower.MULTIPLICATIVE, parse_binary_expr)
     led(TokenKind.SLASH, BindingPower.MULTIPLICATIVE, parse_binary_expr)
+    led(TokenKind.STAR, BindingPower.MULTIPLICATIVE, parse_binary_expr)
+    led(TokenKind.PERCENT, BindingPower.MULTIPLICATIVE, parse_binary_expr)
+
+    // Member / Computed // Call
+    led(TokenKind.DOT, BindingPower.MEMBER, parse_member_expr)
+    led(TokenKind.OPEN_BRACKET, BindingPower.MEMBER, parse_member_expr)
+    led(TokenKind.OPEN_PAREN, BindingPower.CALL, parse_call_expr)
     //#endregion LED
 
-    //#dregion NUD
+    //#region NUD
     // Literals & Symbols
     nud(TokenKind.NUMBER, parse_primary_expr)
     nud(TokenKind.STRING, parse_primary_expr)
     nud(TokenKind.IDENTIFIER, parse_primary_expr)
-    nud(TokenKind.OPEN_PAREN, parse_grouping_expr)
+
+    // Unary/Prefix
+    nud(TokenKind.TYPEOF, parse_prefix_expr)
     nud(TokenKind.DASH, parse_prefix_expr)
+    nud(TokenKind.NOT, parse_prefix_expr)
+    nud(TokenKind.OPEN_BRACKET, parse_array_literal_expr)
+
+    // Grouping Expr
+    nud(TokenKind.OPEN_PAREN, parse_grouping_expr)
+    nud(TokenKind.FN, parse_fn_expr)
+    nud(TokenKind.NEW, parse_class_instanciation_expr);
     //#endregion NUD
 
     //#region Stmt
-    // Statements
-    stmt(TokenKind.CONST, parse_var_decl_stmt)
+    stmt(TokenKind.OPEN_CURLY, parse_block_stmt)
     stmt(TokenKind.LET, parse_var_decl_stmt)
+    stmt(TokenKind.CONST, parse_var_decl_stmt)
+    stmt(TokenKind.FN, parse_fn_declaration)
+    stmt(TokenKind.IF, parse_if_stmt)
+    stmt(TokenKind.IMPORT, parse_import_stmt)
+    stmt(TokenKind.FOREACH, parse_foreach_stmt)
+    stmt(TokenKind.CLASS, parse_class_declaration_stmt)
     //#endregion Stmt
 }
 createTokenLookups();
