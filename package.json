@@ -12,5 +12,17 @@
     "devDependencies": {
         "ts-node": "^10.9.2",
         "typescript": "^5.5.4"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Ashot-hex/Aramazd.git"
+    },
+    "bugs": {
+        "url": "https://github.com/Ashot-hex/Aramazd/issues"
+    },
+    "homepage": "https://github.com/Ashot-hex/Aramazd#readme",
+    "dependencies": {
+        "@types/node": "^22.14.1",
+        "@types/typescript": "^0.4.29"
     }
 }

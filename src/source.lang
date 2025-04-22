@@ -1,42 +1,106 @@
-import fs;
-import path;
-// import time;
+package fr.iut.am.cbreader.models;
 
-class DirectoryReader {
-  let directoryPath: string;
+/**
+ * Class representing a comic book
+ */
+public class ComicBook implements IComicBook {
 
-  fn mount(directoryPath: string) {
-    this.directoryPath = directoryPath;
-  }
+    //#region Constants
+    private static final String DEFAULT_TITLE = "";
+    private static final String DEFAULT_FILENAME = "";
+    private static final String DEFAULT_SERIES = "";
+    private static final int DEFAULT_NUMBER = 0;
+    //#endregion Constants
 
-  fn readRecentFiles() {
-    let allFiles: []string = fs.readDir(this.directoryPath);
-    let recentFiles: []string = [];
+    //#region Fields
+    private String title;
+    private String fileName;
+    private String series;
+    private int number;
+    //#endregion Fields
 
-    foreach file in allFiles {
-      let fullPath: string = path.join(this.directoryPath, file);
-      let fileInfo: FileInfo = fs.stat(fullPath);
-      if this.isFileRecent(fileInfo.creationTime) {
-        recentFiles.push(fullPath);
-      }
+    //#region Constructors
+    /**
+     * Constructor with all values
+     *
+     * @param title the title of the comic book
+     * @param fileName the file name for the comic book
+     * @param series the series of the comic book
+     * @param number the number of the comic book
+     */
+    public ComicBook(String title, String fileName, String series, int number) {
+        this.title = title;
+        this.fileName = fileName;
+        this.series = series;
+        this.number = number;
     }
 
-    foreach file in recentFiles {
-      println(file, fs.stat(file).creationTime);
+    /**
+     * Constructor with default values for series and number
+     *
+     * @param title the title of the comic book
+     * @param fileName the file name for the comic book
+     */
+    public ComicBook(String title, String fileName) {
+        this(title, fileName, DEFAULT_SERIES, DEFAULT_NUMBER);
     }
-  }
 
-  fn isFileRecent(creationTime: Time): boolean {
-    let twentyFourHoursAgo: Time = time.now() - time.hours(24);
-    creationTime > twentyFourHoursAgo;
-  }
+    /**
+     * Default constructor
+     */
+    public ComicBook() {
+        this(DEFAULT_TITLE, DEFAULT_FILENAME, DEFAULT_SERIES, DEFAULT_NUMBER);
+    }
+    //#endregion Constructors
+
+    @Override
+    public String getTitle() {
+        return title;
+    }
+
+    @Override
+    public String getFileName() {
+        return fileName;
+    }
+
+    @Override
+    public String getSeries() {
+        return series;
+    }
+
+    @Override
+    public int getNumber() {
+        return number;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((fileName == null) ? 0 : fileName.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        ComicBook other = (ComicBook) obj;
+        if (fileName == null) {
+            if (other.fileName != null) {
+                return false;
+            }
+        } else if (!fileName.equals(other.fileName)) {
+            return false;
+        }
+        return true;
+    }
+
 }
-
-fn main() {
-  const directory: string = "/path/to/directory";
-  const reader = new DirectoryReader();
-  reader.mount(directory);
-  reader.readRecentFiles();
-}
-
-main();

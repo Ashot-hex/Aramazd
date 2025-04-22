@@ -1,5 +1,5 @@
-import { RegexHandler, Handlers } from "./handlers";
-import { Token } from "./Token"
+import { Handlers, RegexHandler } from "./handlers";
+import { Token } from "./Token";
 import { TokenKind } from "./TokenKind";
 
 
@@ -64,9 +64,6 @@ export class Lexer {
 
         this.Tokens.push(token);
     }
-    // push(token: Token): void {
-    // this.tokens.push(token);
-    // }
     remainder(): string {
         return this.source.slice(this.pos);
     }
@@ -91,52 +88,40 @@ function createLexer(source: string): Lexer {
     const patterns: RegexPattern[] = [
         // Symbol length n
         { regex: /^\s+/, handler: Handlers.skipHandler },
-        { regex: /^\.\d+/, handler: Handlers.numberHandler },
-        { regex: /^\d+\.\d+/, handler: Handlers.numberHandler },
-        { regex: /^\d+/, handler: Handlers.numberHandler },
-        { regex: /^"[^"]*"/, handler: Handlers.stringHandler },
-        { regex: /^'[^']*'/, handler: Handlers.stringHandler },
+        { regex: /^\.\d+/, handler: Handlers.literalHandler },
+        { regex: /^\d+\.\d+/, handler: Handlers.literalHandler },
+        { regex: /^\d+/, handler: Handlers.literalHandler },
+        { regex: /^"[^"]*"/, handler: Handlers.literalHandler },
+        { regex: /^'[^']*'/, handler: Handlers.literalHandler },
         { regex: /^\/\/.*/, handler: Handlers.commentHandler },
+        { regex: /^\/\*\*[^]*\*\//, handler: Handlers.commentHandler },
         { regex: /^[\w_][\w\d_]*/, handler: Handlers.symbolHandler },
+        { regex: /^@[\w_][\w\d_]*/, handler: Handlers.symbolHandler },
 
-        // Symbol length 3
-        createPattern(TokenKind.NULLISH_ASSIGNMENT, "??="),
-
-        // Symbol length 2
-        createPattern(TokenKind.EQUALS, "=="),
-        createPattern(TokenKind.NOT_EQUALS, "!="),
-        createPattern(TokenKind.LESS_EQUALS, "<="),
-        createPattern(TokenKind.GREATER_EQUALS, ">="),
-        createPattern(TokenKind.OR, "||"),
-        createPattern(TokenKind.AND, "&&"),
-        createPattern(TokenKind.DOT_DOT, ".."),
-        createPattern(TokenKind.PLUS_PLUS, "++"),
-        createPattern(TokenKind.MINUS_MINUS, "--"),
-        createPattern(TokenKind.PLUS_EQUALS, "+="),
-        createPattern(TokenKind.MINUS_EQUALS, "-="),
-
-        // Symbol length 1
-        createPattern(TokenKind.OPEN_BRACKET, "["),
-        createPattern(TokenKind.CLOSE_BRACKET, "]"),
-        createPattern(TokenKind.OPEN_CURLY, "{"),
-        createPattern(TokenKind.CLOSE_CURLY, "}"),
+        createPattern(TokenKind.OPEN_BRACE, "["),
+        createPattern(TokenKind.CLOSE_BRACE, "]"),
+        createPattern(TokenKind.OPEN_BRACKET, "{"),
+        createPattern(TokenKind.CLOSE_BRACKET, "}"),
         createPattern(TokenKind.OPEN_PAREN, "("),
         createPattern(TokenKind.CLOSE_PAREN, ")"),
 
-        createPattern(TokenKind.ASSIGNMENT, "="),
-        createPattern(TokenKind.NOT, "!"),
-        createPattern(TokenKind.LESS, "<"),
-        createPattern(TokenKind.GREATER, ">"),
-        createPattern(TokenKind.DOT, "."),
-        createPattern(TokenKind.SEMI_COLON, ";"),
-        createPattern(TokenKind.COLON, ":"),
-        createPattern(TokenKind.QUESTION, "?"),
+        createPattern(TokenKind.SEMICOLON, ";"),
         createPattern(TokenKind.COMMA, ","),
-        createPattern(TokenKind.PLUS, "+"),
-        createPattern(TokenKind.DASH, "-"),
-        createPattern(TokenKind.SLASH, "/"),
-        createPattern(TokenKind.STAR, "*"),
-        createPattern(TokenKind.PERCENT, "%"),
+        createPattern(TokenKind.DOT, "."),
+        createPattern(TokenKind.LINE_COMMENT, "//"),
+
+        createPattern(TokenKind.OPERATOR, "+"),
+        createPattern(TokenKind.OPERATOR, "*"),
+        createPattern(TokenKind.OPERATOR, "-"),
+        createPattern(TokenKind.OPERATOR, "/"),
+        createPattern(TokenKind.OPERATOR, "=="),
+        createPattern(TokenKind.OPERATOR, "!="),
+        createPattern(TokenKind.OPERATOR, "!"),
+
+        createPattern(TokenKind.OPERATOR, "="),
+
+        createPattern(TokenKind.QUESTION, "?"),
+        createPattern(TokenKind.COLON, ":"),
     ];
 
     return new Lexer(patterns, source);
