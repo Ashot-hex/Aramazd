@@ -47,6 +47,7 @@ function symbolHandler(l: Lexer, regex: RegExp): void {
         const kind = RESERVED_KEYWORDS_LOOKUP.has(value)
             ? TokenKind.IDENTIFIER
             : TokenKind.SYMBOL;
+            
         l.push(kind, value)
 
         l.advanceN(value.length);

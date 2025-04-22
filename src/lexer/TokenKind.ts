@@ -49,6 +49,7 @@ const RESERVED_KEYWORDS: string[] = [
     "final",
     "implements",
     "class",
+    "return",
 ]
 
 // Dict of the keyword's name (string) to itself
