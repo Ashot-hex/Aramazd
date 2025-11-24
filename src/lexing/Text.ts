@@ -1,19 +1,39 @@
+import { Pos } from "./Pos";
+
 export class Text {
-	public constructor(private _remaining: string) {
-		this._remaining = _remaining.trim();
-	}
+  private _remaining: string;
 
-	public get remaining(): string {
-		return this._remaining;
-	}
+  public constructor(private _content: string) {
+    this._remaining = _content.trim();
+  }
 
-	public get atEOF(): boolean {
-		return this.remaining.length === 0;
-	}
+  public get _consumed(): string {
+    const cursor = this._content.length - this.remaining.length;
+    return this._content.substring(0, cursor);
+  }
+  public get remaining(): string {
+    return this._remaining;
+  }
 
-	public advance(n: number = 1): void {
-		if (!this.atEOF) {
-			this._remaining = this._remaining.slice(n).trim();
-		}
-	}
+  public get pos(): Pos {
+    const col = (this._consumed.split(/[\r\n]/gm)?.at(-1)?.length ?? 0) + 1;
+    const ln = (this._consumed.match(/[\r\n]/gm)?.length ?? 0) - 1;
+
+    return {
+      col,
+      line: ln,
+    };
+  }
+
+  public get atEOF(): boolean {
+    return this.remaining.length === 0;
+  }
+
+  public advance(n: number = 1): void {
+    if (this.atEOF) {
+      return;
+    }
+
+    this._remaining = this._remaining.substring(n).trim();
+  }
 }

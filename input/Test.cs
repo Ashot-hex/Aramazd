@@ -1,95 +1,36 @@
-﻿using Tax.Simulator.Exceptions;
+﻿// using using1.using2.using3;
 
-namespace Tax.Simulator;
+// namespace namespace1.namespace2;
 
-/// <summary>
-/// Model d'un foyer pour le calcul des impôts annuel
-/// </summary>
-public class Foyer
-{
-    public static readonly string COUPLE = "Marié/Pacsé";
-    public static readonly string CELIBATAIRE = "Célibataire";
+// public class Foyer
+// {
+//     public const string ConstString = "ConstString";
+//     public readonly string ReadonlyString = "ReadonlyString";
+//     public static string StaticString = "StaticString";
+//     public static readonly string StaticReadonlyString = "StaticReadonlyString";
 
-    private string situationFamiliale;
-    private decimal salairePrincipal;
-    private decimal salaireConjoint;
-    private int nombreEnfants;
+//     private int nombreEnfants;
 
-    /// <summary>
-    /// Constructeur par défaut
-    /// </summary>
-    /// <param name="situationFamiliale"> Situation familiale du foyer </param>
-    /// <param name="nombreEnfants"> Nombre d'enfants dans le foyer </param>
-    /// <param name="salairePrincipal"> Salaire principal du foyer </param>
-    /// <param name="salaireConjoint"> Salaire du conjoint, par default à 0 </param>
-    /// 
-    /// <exception cref="SituationFamilialeInvalide">Si la situation familiale est invalide</exception>
-    /// <exception cref="SalaireNegatif">Si le salaire principal, ou celui du conjoint, est invalide</exception>
-    /// <exception cref="NombreEnfantsInvalide">Si le nombre d'enfants donnés est invalide</exception>
-    public Foyer(string situationFamiliale, int nombreEnfants, decimal salairePrincipal, decimal salaireConjoint = 0)
-    {
-        this.situationFamiliale = situationFamiliale;
-        this.salairePrincipal = salairePrincipal;
-        this.salaireConjoint = salaireConjoint;
-        this.nombreEnfants = nombreEnfants;
+//     public Foyer(string arg1, decimal arg2 = 0)
+//     {
+        // this.assign1 = value;
+        // assign2.value = value;
+        assign3 = value;
 
-        VerifierValeurs();
-    }
+        // Foo();
+        // func1().func2().func3().value;
+//     }
 
-    /// <summary>
-    /// Verifie que tout les attributs ont étés correctement définit
-    /// </summary>
-    /// <exception cref="SituationFamilialeInvalide">Si la situation familiale est invalide</exception>
-    /// <exception cref="SalaireNegatif">Si le salaire principal, ou celui du conjoint, est invalide</exception>
-    /// <exception cref="NombreEnfantsInvalide">Si le nombre d'enfants donnés est invalide</exception>
-    private void VerifierValeurs()
-    {
-        if (situationFamiliale != CELIBATAIRE && situationFamiliale != COUPLE)
-        {
-            throw new SituationFamilialeInvalide();
-        }
+//     private void Foo() { }
 
-        if (salairePrincipal <= 0)
-        {
-            throw new SalaireNegatif();
-        }
+//     public decimal SalaireMensuelTotal => salairePrincipal + salaireConjoint;
 
-        if (situationFamiliale == COUPLE && salaireConjoint < 0)
-        {
-            throw new SalaireNegatif();
-        }
-
-        if (nombreEnfants < 0)
-        {
-            throw new NombreEnfantsInvalide();
-        }
-    }
-
-    /// <summary>
-    /// Obtient le salaire total du foyer
-    /// </summary>
-    public decimal SalaireMensuelTotal => salairePrincipal + salaireConjoint;
-
-    /// <summary>
-    /// Obtient les parts fiscales du foyer
-    /// </summary>
-    public decimal PartsFiscales
-    {
-        get
-        {
-            int baseQuotient = situationFamiliale == COUPLE ? 2 : 1;
-            decimal quotientEnfants = 0m;
-
-            if (nombreEnfants <= 2)
-            {
-                quotientEnfants = nombreEnfants / 2m;
-            }
-            else
-            {
-                quotientEnfants = 1.0m + (nombreEnfants - 2) * 0.5m;
-            }
-
-            return baseQuotient + quotientEnfants;
-        }
-    }
-}
+//     public decimal PartsFiscales
+//     {
+//         get
+//         {
+//             int baseQuotient = situationFamiliale;
+//             decimal quotientEnfants = 0m;
+//         }
+//     }
+// }

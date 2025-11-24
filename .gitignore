@@ -2,4 +2,5 @@ dist/
 .vscode/
 stmt.json
 tokens.json
+error.json
 node_modules/
