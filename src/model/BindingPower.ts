@@ -1,20 +1,21 @@
+import { parse_binary_expr, parse_primary_expr } from "../pasring/Expr";
 import Parser from "../pasring/Parser";
 import { Expr } from "./ast/Expressions";
 import { Stmt } from "./ast/Statements";
 import { TokenType } from "./TokenType";
 
 export enum BindingPower {
-	Default = 0,
-	Comma = 1,
-	Assignment = 2,
-	Logical = 3,
-	Relational = 4,
-	Additive = 5,
-	Multiplicative = 6,
-	Unary = 7,
-	Call = 8,
-	Member = 9,
-	Primary = 10,
+    Default = 0,
+    Comma = 1,
+    Assignment = 2,
+    Logical = 3,
+    Relational = 4,
+    Additive = 5,
+    Multiplicative = 6,
+    Unary = 7,
+    Call = 8,
+    Member = 9,
+    Primary = 10,
 }
 
 type stmt_handler = (p: Parser) => Stmt;
@@ -27,22 +28,19 @@ export const LedLookup = new Map<TokenType, led_handler>();
 export const BpLookup = new Map<TokenType, BindingPower>();
 
 function led(kind: TokenType, bp: BindingPower, led_fn: led_handler) {
-	BpLookup.set(kind, bp);
-	LedLookup.set(kind, led_fn);
+    BpLookup.set(kind, bp);
+    LedLookup.set(kind, led_fn);
 }
 
 function nud(kind: TokenType, bp: BindingPower, nud_fn: nud_handler) {
-	BpLookup.set(kind, BindingPower.Primary);
-	NudLookup.set(kind, nud_fn);
+    BpLookup.set(kind, BindingPower.Primary);
+    NudLookup.set(kind, nud_fn);
 }
 
 function stmt(kind: TokenType, stmt_fn: stmt_handler) {
-	BpLookup.set(kind, BindingPower.Default);
-	StmtLookup.set(kind, stmt_fn);
+    BpLookup.set(kind, BindingPower.Default);
+    StmtLookup.set(kind, stmt_fn);
 }
-
-const parse_binary_expr = null!;
-const parse_primary_expr = null!;
 
 export function createTokenLookups() {
 	// Logical

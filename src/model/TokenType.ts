@@ -4,6 +4,10 @@ export class TokenType {
 		TokenType.Map.set(this.name, this);
 	}
 
+	public toString(): string {
+		return this.name;
+	}
+
 	public static ToTokenType(name: string): TokenType | undefined {
 		return this.Map.get(name);
 	}

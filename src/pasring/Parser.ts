@@ -1,3 +1,4 @@
+import { type } from "os";
 import { BlockStmt, Stmt } from "../model/ast/Statements";
 import { createTokenLookups } from "../model/BindingPower";
 import Token from "../model/Token";
@@ -10,11 +11,16 @@ export default class Parser {
 		createTokenLookups();
 	}
 
-	parse(): BlockStmt {
+	public parse(): BlockStmt {
 		const body: Stmt[] = [];
 
 		while (this.hasTokens()) {
-			body.push(body, parse_stmt(this));
+			try {
+				body.push(parse_stmt(this));
+			} catch (err) {
+				console.error(err);
+				throw new SyntaxError();
+			}
 		}
 
 		return {
@@ -22,43 +28,30 @@ export default class Parser {
 		};
 	}
 
+	// HELPER METHODS
+	currentToken(): Token {
+		return this.tokens[this.pos];
+	}
 
-    // HELPER METHODS
-    currentToken(): Token {
-        return this.tokens[this.pos]
-    }
+	currentTokenKind(): TokenType {
+		return this.currentToken().type;
+	}
 
-    currentTokenKind(): TokenKind {
-        return this.currentToken().Kind
-    }
+	advance(): Token {
+		const tk = this.currentToken();
+		this.pos++;
+		return tk;
+	}
 
-    advance(): Token {
-        const tk = this.currentToken()
-        this.pos++
-        return tk
-    }
+	hasTokens(): boolean {
+		return this.pos < this.tokens.length && this.currentTokenKind() != TokenType.EOF;
+	}
 
-    hasTokens(): boolean {
-        return this.pos < this.tokens.length && this.currentTokenKind() != TokenType.EOF
-    }
+	expect(expected: TokenType): Token {
+		if (expected != this.currentTokenKind()) {
+			throw `Expected %s but recieved ${type.name} instead.`;
+		}
 
-    expectError(expected: TokenType, err: any): Token {
-        const token = this.currentToken()
-        const type = token.type
-
-        if (type != expected) {
-            if (!err) {
-                err = `Expected %s but recieved ${type.name} instead.`
-            }
-
-            panic(err)
-        }
-
-        return this.advance()
-    }
-
-    expect(expectedKind TokenKind): Token {
-        return this.expectError(expectedKind, nil)
-    }
-
+		return this.advance();
+	}
 }

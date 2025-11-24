@@ -1,7 +1,8 @@
 import * as fs from "fs";
 import Lexer from "./lexing/Lexer";
+import Parser from "./pasring/Parser";
 
-const content = fs.readFileSync("./input/Test.cs", "utf-8");
+const content = fs.readFileSync("./input/00.lang", "utf-8");
 const lexer = new Lexer(content);
 
 const N = 1;
@@ -18,6 +19,7 @@ function timeit(name: string, func: Function) {
 timeit("lexer", lexer.tokenize.bind(lexer));
 
 const tokens = lexer.tokenize();
-console.log(tokens.length);
+const block = new Parser(tokens).parse();
 
-fs.writeFileSync("./tokens.json", JSON.stringify(tokens.map(t => [t.type.name, t.value]))), { encoding: "utf-8" };
+fs.writeFileSync("./tokens.json", JSON.stringify(tokens.map((t) => [t.type.name, t.value]))), { encoding: "utf-8" };
+fs.writeFileSync("./stmt.json", JSON.stringify(block), { encoding: "utf-8" });

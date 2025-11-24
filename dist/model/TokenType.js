@@ -8,21 +8,22 @@ class TokenType {
         this.name = name;
         TokenType.Map.set(this.name, this);
     }
+    toString() {
+        return this.name;
+    }
     static ToTokenType(name) {
         return this.Map.get(name);
     }
     static Comment = new TokenType("Comment");
     static Symbol = new TokenType("Symbol");
-    static Integer = new TokenType("Integer");
+    static Number = new TokenType("Number");
     static Float = new TokenType("Float");
-    static Decimal = new TokenType("Decimal");
-    static FloatDecimal = new TokenType("FloatDecimal");
     static String = new TokenType("String");
     static InlineBody = new TokenType("InlineBody");
-    static LessOrEqual = new TokenType("LessOrEqual");
-    static GreaterOrEqual = new TokenType("GreaterOrEqual");
-    static Equal = new TokenType("Equal");
-    static NotEqual = new TokenType("NotEqual");
+    static LessOrEquals = new TokenType("LessOrEquals");
+    static GreaterOrEquals = new TokenType("GreaterOrEquals");
+    static Equals = new TokenType("Equals");
+    static NotEquals = new TokenType("NotEquals");
     static And = new TokenType("And");
     static Or = new TokenType("Or");
     static Coalesce = new TokenType("Coalesce");
@@ -47,6 +48,8 @@ class TokenType {
     static LogicalAnd = new TokenType("LogicalAnd");
     static LogicalOr = new TokenType("LogicalOr");
     static Not = new TokenType("Not");
+    static DotDot = new TokenType("DotDot");
+    static Percent = new TokenType("Percent");
     static EOF = new TokenType("EOF");
 }
 exports.TokenType = TokenType;

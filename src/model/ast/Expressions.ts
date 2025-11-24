@@ -2,15 +2,20 @@ import Token from "../Token";
 
 export interface Expr {}
 export interface NumberExpr extends Expr {
-	value: number;
+  value: number;
 }
 
 export interface StringExpr extends Expr {
-	value: string;
+  value: string;
 }
 
 export interface SymbolExpr extends Expr {
-	value: string;
+  value: string;
+}
+
+export interface AssignmentExpr extends Expr {
+  assigne: Expr;
+  assignedValue: Expr;
 }
 
 // -------------------
@@ -18,7 +23,7 @@ export interface SymbolExpr extends Expr {
 // -------------------
 
 export interface BinaryExpr extends Expr {
-	left: Expr;
-	operator: Token;
-	right: Expr;
+  left: Expr;
+  operator: Token;
+  right: Expr;
 }

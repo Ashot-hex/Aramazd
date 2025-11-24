@@ -6,17 +6,17 @@ const Patterns = {
 	},
 
 	variable: {
-		Symbol: /^\w+/,
 		Number: /^(\d*.)?\d+m?/,
 		String: /^"[^"]*"/,
+		Symbol: /^\w+/,
 	},
 
 	double: {
 		InlineBody: /^\=\>/,
-		LessOrEqual: /^\<\=/,
-		GreaterOrEqual: /^\>\=/,
-		Equal: /^\=\=/,
-		NotEqual: /^\!\=/,
+		LessOrEquals: /^\<\=/,
+		GreaterOrEquals: /^\>\=/,
+		Equals: /^\=\=/,
+		NotEquals: /^\!\=/,
 		And: /^\&\&/,
 		Or: /^\|\|/,
 		Coalesce: /^\|\|/,

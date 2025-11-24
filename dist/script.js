@@ -38,7 +38,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs = __importStar(require("fs"));
 const Lexer_1 = __importDefault(require("./lexing/Lexer"));
-const content = fs.readFileSync("./input/Test.cs", "utf-8");
+const Parser_1 = __importDefault(require("./pasring/Parser"));
+const content = fs.readFileSync("./input/00.lang", "utf-8");
 const lexer = new Lexer_1.default(content);
 const N = 1;
 function timeit(name, func) {
@@ -52,6 +53,7 @@ function timeit(name, func) {
 }
 timeit("lexer", lexer.tokenize.bind(lexer));
 const tokens = lexer.tokenize();
-console.log(tokens.length);
-fs.writeFileSync("./tokens.json", JSON.stringify(tokens.map(t => [t.type.name, t.value]))), { encoding: "utf-8" };
+const block = new Parser_1.default(tokens).parse();
+fs.writeFileSync("./tokens.json", JSON.stringify(tokens.map((t) => [t.type.name, t.value]))), { encoding: "utf-8" };
+fs.writeFileSync("./stmt.json", JSON.stringify(block), { encoding: "utf-8" });
 //# sourceMappingURL=script.js.map
